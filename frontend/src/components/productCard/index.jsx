@@ -25,7 +25,7 @@ const ProductCard = ({ item }) => {
       onMouseLeave={() => setHover(false)}
     >
       <img
-        src={item?.images[!hover ? 0 : 1]}
+        src={!hover ? item.thumbnail: item.images[1]}
         alt=""
         className="aspect-square w-full"
       />
