@@ -1,14 +1,10 @@
 import { formatCurrency } from "@/Function/formatCurrency";
-import { getProductById } from "@/store/products/action";
 import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ item }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { loading } = useSelector((store) => store.products);
   const [hover, setHover] = React.useState(false);
 
   return (
@@ -23,9 +19,7 @@ const ProductCard = ({ item }) => {
         alignItems: "start",
       }}
       onClick={() => {
-        dispatch(
-          getProductById(item.url, () => navigate("/san-pham/" + item.url))
-        );
+        navigate("/san-pham/" + item.url);
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}

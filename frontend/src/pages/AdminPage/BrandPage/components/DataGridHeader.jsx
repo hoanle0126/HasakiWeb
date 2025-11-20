@@ -1,3 +1,5 @@
+import { formatDate } from "@/Function/formatDate";
+import { formatTime } from "@/Function/formatTime";
 import { deleteBrand } from "@/store/brands/action";
 import { MuiTheme } from "@/theme";
 import { Icon } from "@iconify/react";
@@ -16,6 +18,24 @@ import {
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+function RenderDateTime(props) {
+  const { value } = props;
+
+  return (
+    <Stack
+      sx={{
+        height: "100%",
+        justifyContent: "center",
+      }}
+    >
+      <Typography variant="body2">{formatDate(value)}</Typography>
+      <Typography variant="captiontext" color={"text.secondary"}>
+        {formatTime(value)}
+      </Typography>
+    </Stack>
+  );
+}
 
 function RenderProduct(props) {
   const { row } = props;
@@ -95,9 +115,9 @@ function RenderAction(props) {
         }}
       >
         <MenuList>
-          <MenuItem onClick={() => navigate("/admin/brands/" + row.id)}>
+          <MenuItem onClick={() => navigate("/admin/brands/" + row.url)}>
             <Icon icon="solar:eye-bold" />
-            View {row.id}
+            View
           </MenuItem>
           <MenuItem>
             <Icon
@@ -108,7 +128,7 @@ function RenderAction(props) {
               variant="body2"
               color={"error"}
               onClick={() => {
-                dispatch(deleteBrand(row.id));
+                dispatch(deleteBrand(row.url));
                 console.log("delete");
               }}
             >
@@ -128,6 +148,18 @@ const DataGridHeader = () => {
       headerName: "Categories",
       flex: 1,
       renderCell: RenderProduct,
+    },
+    {
+      field: "updated_at",
+      headerName: "Updated at",
+      width: 200,
+      renderCell: RenderDateTime,
+    },
+    {
+      field: "created_at",
+      headerName: "Created at",
+      width: 200,
+      renderCell: RenderDateTime,
     },
     {
       field: "action",

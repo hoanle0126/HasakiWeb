@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\NewMessage;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CartController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoriesResource;
 use App\Http\Resources\CityResource;
@@ -86,6 +88,7 @@ Route::post("/add-products2", function (Request $request) {
 });
 
 Route::apiResource("/products", ProductController::class);
+Route::post("/payments", [PaymentController::class, 'processPayment']);
 Route::apiResource("/addresses", AddressController::class)->middleware('auth:sanctum');
 Route::apiResource("/carts", CartController::class)->middleware('auth:sanctum');
 Route::apiResource("/orders", OrderController::class)->middleware('auth:sanctum');
@@ -112,8 +115,23 @@ Route::get('/user', function () {
     return new UserResource(request()->user());
 })
     ->middleware('auth:sanctum')
-    ->name('login');
+    ->name('user');
 
 Route::get("/list_cities", function () {
     return CityResource::collection(City::all());
+});
+
+Route::post('/chat/send', function (Request $request) {
+    $request->validate([
+        'user' => 'required|string',
+        'message' => 'required|string',
+    ]);
+
+    // Kích hoạt Event. Laravel sẽ đẩy Event này vào Redis Queue.
+    broadcast(new NewMessage($request->user, $request->message));
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Message broadcasted successfully.'
+    ]);
 });

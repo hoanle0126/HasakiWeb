@@ -30,7 +30,7 @@ const LandingPage = () => {
         {/* <TopSearchSection /> */}
         {/* <ServiceSection /> */}
       </Stack>
-        <ProductSection />
+      <ProductSection />
     </div>
   );
 };

@@ -57,6 +57,7 @@ const DiscountCodePage = () => {
       }
     >
       <DataGrid
+      loading={loading}
         checkboxSelection
         disableRowSelectionOnClick
         onRowSelectionModelChange={(it) => {
